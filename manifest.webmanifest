@@ -1,0 +1,27 @@
+{
+  "id": "./sorular.html",
+  "name": "Azra'nın Soru Çözüm Günlüğü",
+  "short_name": "Soru Günlüğü",
+  "description": "TYT ve AYT soru çözüm günlüğü ve günlük notlar.",
+  "lang": "tr-TR",
+  "start_url": "./sorular.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06152b",
+  "theme_color": "#06152b",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
