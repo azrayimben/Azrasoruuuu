@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#06152b">
+    <link rel="manifest" href="manifest.webmanifest">
 
     <title>Azra'nın Ders Çalışma Günlüğü</title>
 
@@ -20,7 +22,6 @@
                 radial-gradient(circle at 20% 20%, rgba(95, 170, 255, 0.18), transparent 30%),
                 radial-gradient(circle at 80% 80%, rgba(50, 110, 200, 0.18), transparent 30%),
                 linear-gradient(135deg, #06152b, #0a2344, #092d55);
-
             color: #eef7ff;
             overflow-x: hidden;
         }
@@ -59,7 +60,6 @@
                 opacity: .25;
                 transform: scale(.8);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1.4);
@@ -73,11 +73,89 @@
             min-height: 100vh;
             max-width: 1100px;
             margin: auto;
-            padding: 70px 25px 50px;
-
+            padding: 35px 25px 50px;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* YENİ: Logo ve uygulama indirme alanı */
+        .top-actions {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 45px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #dff3ff;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+
+        .logo-symbol {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(135, 211, 255, .55);
+            border-radius: 15px;
+            background: linear-gradient(145deg, #174d7d, #09213f);
+            box-shadow: 0 0 25px rgba(88, 180, 255, .2);
+        }
+
+        .logo-symbol svg {
+            width: 29px;
+            height: 29px;
+        }
+
+        .brand-name {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-name small {
+            color: #83caff;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .install-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 19px;
+            border: 1px solid rgba(135, 211, 255, .6);
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1a5a8c, #103b67);
+            color: #eff9ff;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 22px rgba(45, 145, 225, .15);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 28px rgba(45, 145, 225, .3);
+        }
+
+        .install-btn:focus-visible {
+            outline: 2px solid #dff3ff;
+            outline-offset: 4px;
         }
 
         /* Üst küçük yazı */
@@ -88,6 +166,7 @@
             text-transform: uppercase;
             margin-bottom: 18px;
             opacity: .9;
+            text-align: center;
         }
 
         /* Başlık */
@@ -96,7 +175,6 @@
             font-size: clamp(42px, 7vw, 78px);
             line-height: 1.05;
             font-weight: normal;
-
             background: linear-gradient(
                 90deg,
                 #dff3ff,
@@ -104,10 +182,8 @@
                 #ffffff,
                 #72baff
             );
-
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-
             text-shadow: 0 0 35px rgba(87, 177, 255, .25);
         }
 
@@ -122,7 +198,6 @@
         .line {
             height: 1px;
             flex: 1;
-
             background: linear-gradient(
                 90deg,
                 transparent,
@@ -146,101 +221,70 @@
             margin-bottom: 50px;
         }
 
-
-        /* ==================================================
-           YENİ: BÜYÜK GÖRÜNTÜLEME KUTUSU
-        ================================================== */
-
+        /* Büyük görüntüleme kutusu */
         .view-card {
             position: relative;
-
             width: 100%;
             min-height: 185px;
-
             padding: 32px 40px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 25px;
-
             text-decoration: none;
             color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(25, 91, 150, .72),
-                    rgba(10, 48, 88, .78)
-                );
-
+            background: linear-gradient(
+                135deg,
+                rgba(25, 91, 150, .72),
+                rgba(10, 48, 88, .78)
+            );
             border: 1px solid rgba(135, 211, 255, .52);
             border-radius: 27px;
-
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-
             overflow: hidden;
-
             box-shadow:
                 0 18px 55px rgba(0, 0, 0, .28),
                 inset 0 0 35px rgba(90, 170, 255, .07);
-
             transition:
                 transform .35s ease,
                 border-color .35s ease,
                 box-shadow .35s ease;
-
             margin-bottom: 30px;
         }
 
-        /* Büyük kutunun ışığı */
         .view-card::before {
             content: "";
-
             position: absolute;
-
             width: 250px;
             height: 250px;
-
             border-radius: 50%;
-
             background: rgba(76, 180, 255, .13);
-
             filter: blur(30px);
-
             top: -130px;
             right: -50px;
-
             pointer-events: none;
         }
 
         .view-card::after {
             content: "";
-
             position: absolute;
-
             width: 100%;
             height: 1px;
-
             left: 0;
             bottom: 0;
-
             background: linear-gradient(
                 90deg,
                 transparent,
                 #7dd0ff,
                 transparent
             );
-
             opacity: .4;
         }
 
         .view-card:hover {
             transform: translateY(-8px);
-
             border-color: rgba(145, 219, 255, .9);
-
             box-shadow:
                 0 25px 65px rgba(0, 0, 0, .38),
                 0 0 40px rgba(64, 163, 255, .18);
@@ -250,7 +294,6 @@
             display: flex;
             align-items: center;
             gap: 25px;
-
             position: relative;
             z-index: 1;
         }
@@ -258,21 +301,14 @@
         .view-icon {
             width: 82px;
             height: 82px;
-
             flex-shrink: 0;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             font-size: 42px;
-
             border-radius: 22px;
-
             background: rgba(110, 193, 255, .11);
-
             border: 1px solid rgba(130, 207, 255, .25);
-
             box-shadow:
                 inset 0 0 20px rgba(100, 190, 255, .05),
                 0 0 25px rgba(72, 168, 255, .08);
@@ -281,9 +317,7 @@
         .view-text h2 {
             font-size: clamp(24px, 4vw, 34px);
             font-weight: normal;
-
             color: #e9f8ff;
-
             margin-bottom: 9px;
         }
 
@@ -296,22 +330,16 @@
         .view-arrow {
             position: relative;
             z-index: 1;
-
             width: 52px;
             height: 52px;
-
             flex-shrink: 0;
-
             border: 1px solid rgba(130, 202, 255, .45);
             border-radius: 50%;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             color: #b9e5ff;
             font-size: 25px;
-
             transition: .3s ease;
         }
 
@@ -320,17 +348,11 @@
             transform: translateX(7px);
         }
 
-
-        /* ==================================================
-           ALT KUTULAR
-        ================================================== */
-
+        /* Alt kutular */
         .cards {
             width: 100%;
-
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-
             gap: 30px;
         }
 
@@ -338,27 +360,20 @@
             position: relative;
             min-height: 270px;
             padding: 38px;
-
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-
             text-decoration: none;
             color: white;
-
             background: rgba(11, 42, 78, .65);
             border: 1px solid rgba(126, 198, 255, .35);
             border-radius: 24px;
-
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-
             overflow: hidden;
-
             box-shadow:
                 0 15px 50px rgba(0, 0, 0, .25),
                 inset 0 0 30px rgba(90, 170, 255, .04);
-
             transition:
                 transform .35s ease,
                 border-color .35s ease,
@@ -367,50 +382,36 @@
 
         .card::before {
             content: "";
-
             position: absolute;
-
             width: 180px;
             height: 180px;
-
             border-radius: 50%;
-
             background: rgba(80, 170, 255, .12);
-
             filter: blur(25px);
-
             top: -70px;
             right: -50px;
         }
 
         .card::after {
             content: "";
-
             position: absolute;
-
             width: 100%;
             height: 1px;
-
             left: 0;
             bottom: 0;
-
             background: linear-gradient(
                 90deg,
                 transparent,
                 #63baff,
                 transparent
             );
-
             opacity: 0;
-
             transition: opacity .3s ease;
         }
 
         .card:hover {
             transform: translateY(-10px);
-
             border-color: rgba(125, 205, 255, .75);
-
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, .35),
                 0 0 35px rgba(64, 163, 255, .13);
@@ -423,11 +424,7 @@
         .card-icon {
             font-size: 43px;
             margin-bottom: 25px;
-
-            filter:
-                drop-shadow(
-                    0 0 12px rgba(105, 190, 255, .5)
-                );
+            filter: drop-shadow(0 0 12px rgba(105, 190, 255, .5));
         }
 
         .card h2 {
@@ -444,7 +441,6 @@
 
         .card-bottom {
             margin-top: 30px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -459,17 +455,13 @@
         .arrow {
             width: 38px;
             height: 38px;
-
             border: 1px solid rgba(130, 202, 255, .4);
             border-radius: 50%;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             color: #a9ddff;
             font-size: 20px;
-
             transition: .3s ease;
         }
 
@@ -478,27 +470,46 @@
             transform: translateX(5px);
         }
 
-
         /* Alt bilgi */
         footer {
             margin-top: 65px;
-
             color: #6e9bc1;
             font-size: 13px;
             letter-spacing: 1px;
-
             text-align: center;
         }
 
-
-        /* ==================================================
-           MOBİL
-        ================================================== */
-
+        /* Mobil */
         @media (max-width: 700px) {
-
             .container {
-                padding: 50px 18px 35px;
+                padding: 25px 18px 35px;
+            }
+
+            .top-actions {
+                margin-bottom: 40px;
+                gap: 10px;
+            }
+
+            .brand-logo {
+                gap: 8px;
+                font-size: 12px;
+            }
+
+            .logo-symbol {
+                width: 42px;
+                height: 42px;
+                border-radius: 13px;
+            }
+
+            .brand-name small {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .install-btn {
+                padding: 11px 12px;
+                font-size: 11px;
+                gap: 6px;
             }
 
             .cards {
@@ -518,13 +529,9 @@
                 font-size: 45px;
             }
 
-            /* Büyük kutu mobilde */
-
             .view-card {
                 min-height: 175px;
-
                 padding: 25px;
-
                 align-items: center;
             }
 
@@ -535,9 +542,7 @@
             .view-icon {
                 width: 62px;
                 height: 62px;
-
                 font-size: 30px;
-
                 border-radius: 18px;
             }
 
@@ -552,14 +557,11 @@
             .view-arrow {
                 width: 43px;
                 height: 43px;
-
                 font-size: 20px;
             }
         }
 
-
         @media (max-width: 450px) {
-
             .view-card {
                 padding: 22px 18px;
             }
@@ -571,7 +573,6 @@
             .view-icon {
                 width: 55px;
                 height: 55px;
-
                 font-size: 27px;
             }
 
@@ -586,7 +587,6 @@
             .view-arrow {
                 width: 38px;
                 height: 38px;
-
                 font-size: 18px;
             }
         }
@@ -596,9 +596,7 @@
 <body>
 
     <!-- Arka plan yıldızları -->
-
     <div class="stars">
-
         <span class="star"></span>
         <span class="star"></span>
         <span class="star"></span>
@@ -607,35 +605,53 @@
         <span class="star"></span>
         <span class="star"></span>
         <span class="star"></span>
-
     </div>
 
-
     <main class="container">
+
+        <!-- YENİ: LOGO VE UYGULAMAYI İNDİR -->
+        <div class="top-actions">
+
+            <div class="brand-logo">
+                <div class="logo-symbol" aria-label="Azra'nın Ders Çalışma Günlüğü logosu">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M24 13C18 8 11 9 7 11V34C13 31 19 32 24 37C29 32 35 31 41 34V11C35 9 30 8 24 13Z"
+                              stroke="#BCE7FF" stroke-width="2.4" stroke-linejoin="round"/>
+                        <path d="M24 14V36" stroke="#72BFFF" stroke-width="2"/>
+                        <path d="M14 17C17 16 19 17 21 18M14 22C17 21 19 22 21 23M27 18C30 16 33 16 36 17M27 23C30 21 33 21 36 22"
+                              stroke="#72BFFF" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M36 5L37.5 9L41.5 10.5L37.5 12L36 16L34.5 12L30.5 10.5L34.5 9L36 5Z"
+                              fill="#E1F5FF"/>
+                    </svg>
+                </div>
+
+                <div class="brand-name">
+                    <span>Azra'nın Günlüğü</span>
+                    <small>Study Journal</small>
+                </div>
+            </div>
+
+            <button class="install-btn" id="installButton" type="button">
+                <span aria-hidden="true">↓</span>
+                Uygulamayı İndir
+            </button>
+
+        </div>
 
         <div class="welcome">
             ✦ Welcome to my study journal ✦
         </div>
-
 
         <h1>
             Azra'nın<br>
             Ders Çalışma Günlüğü
         </h1>
 
-
         <div class="title-decoration">
-
             <span class="line"></span>
-
-            <span class="diamond">
-                ✦
-            </span>
-
+            <span class="diamond">✦</span>
             <span class="line"></span>
-
         </div>
-
 
         <p class="subtitle">
             Hedefler, denemeler, sorular ve küçük zaferler...
@@ -643,144 +659,120 @@
             Her gün biraz daha ileri. ♡
         </p>
 
-
-
-        <!-- ==================================================
-             YENİ BÜYÜK GÖRÜNTÜLEME BUTONU
-        ================================================== -->
-
-        <a
-            href="goruntule.html"
-            class="view-card"
-        >
+        <!-- BÜYÜK GÖRÜNTÜLEME BUTONU -->
+        <a href="goruntule.html" class="view-card">
 
             <div class="view-left">
-
-                <div class="view-icon">
-                    👁️
-                </div>
-
+                <div class="view-icon">👁️</div>
 
                 <div class="view-text">
-
-                    <h2>
-                        Deneme ve Soruları Görüntüle
-                    </h2>
-
+                    <h2>Deneme ve Soruları Görüntüle</h2>
                     <p>
                         Tüm deneme sonuçlarını ve soru çözüm kayıtlarını
                         tek bir yerden görüntüle.
                     </p>
-
                 </div>
-
             </div>
 
-
-            <div class="view-arrow">
-                →
-            </div>
+            <div class="view-arrow">→</div>
 
         </a>
 
-
-
-        <!-- ==================================================
-             ANA KUTULAR
-        ================================================== -->
-
+        <!-- ANA KUTULAR -->
         <section class="cards">
 
-
             <!-- DENEMELER -->
-
-            <a
-                href="denemeler.html"
-                class="card"
-            >
-
+            <a href="denemeler.html" class="card">
                 <div>
-
-                    <div class="card-icon">
-                        📖
-                    </div>
-
-                    <h2>
-                        Denemeler
-                    </h2>
-
+                    <div class="card-icon">📖</div>
+                    <h2>Denemeler</h2>
                     <p>
                         Girdiğim denemeleri, netlerimi, puanlarımı
                         ve zaman içindeki gelişimimi takip et.
                     </p>
-
                 </div>
-
 
                 <div class="card-bottom">
-
-                    <span class="open-text">
-                        DENEMELERİ GÖR →
-                    </span>
-
-                    <span class="arrow">
-                        →
-                    </span>
-
+                    <span class="open-text">DENEMELERİ GÖR →</span>
+                    <span class="arrow">→</span>
                 </div>
-
             </a>
 
-
-
             <!-- SORU ÇÖZÜMLERİ -->
-
-            <a
-                href="sorular.html"
-                class="card"
-            >
-
+            <a href="sorular.html" class="card">
                 <div>
-
-                    <div class="card-icon">
-                        ✎
-                    </div>
-
-                    <h2>
-                        Soru Çözüm Sayıları
-                    </h2>
-
+                    <div class="card-icon">✎</div>
+                    <h2>Soru Çözüm Sayıları</h2>
                     <p>
                         Her gün çözdüğüm soruları kaydet,
                         ders bazında ilerlememi ve toplam çalışmalarımı gör.
                     </p>
-
                 </div>
-
 
                 <div class="card-bottom">
-
-                    <span class="open-text">
-                        İSTATİSTİKLERİ GÖR →
-                    </span>
-
-                    <span class="arrow">
-                        →
-                    </span>
-
+                    <span class="open-text">İSTATİSTİKLERİ GÖR →</span>
+                    <span class="arrow">→</span>
                 </div>
-
             </a>
 
-
         </section>
-
 
         <footer>
             Azra's Study Journal · made with ♡
         </footer>
 
     </main>
+
+    <script>
+        const installButton = document.getElementById("installButton");
+        let deferredPrompt = null;
+
+        // Tarayıcı uygulama yükleme olanağı sunarsa olayı sakla.
+        window.addEventListener("beforeinstallprompt", (event) => {
+            event.preventDefault();
+            deferredPrompt = event;
+        });
+
+        installButton.addEventListener("click", async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+
+                const result = await deferredPrompt.userChoice;
+
+                if (result.outcome === "accepted") {
+                    installButton.textContent = "✓ Yükleme başlatıldı";
+                }
+
+                deferredPrompt = null;
+                return;
+            }
+
+            // Uygulama yükleme penceresi sunulmuyorsa açıklama göster.
+            alert(
+                "Uygulamayı ana ekrana eklemek için:\n\n" +
+                "1. Bu siteyi Chrome üzerinden aç.\n" +
+                "2. Sağ üstteki ⋮ menüsüne dokun.\n" +
+                "3. 'Uygulamayı yükle' veya 'Ana ekrana ekle' seçeneğine dokun.\n\n" +
+                "Bu seçenek görünmüyorsa sitenin PWA kurulum dosyaları eksik olabilir."
+            );
+        });
+
+        window.addEventListener("appinstalled", () => {
+            installButton.textContent = "✓ Uygulama yüklendi";
+            deferredPrompt = null;
+        });
+
+        // Service worker varsa kaydet.
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("./sw.js")
+                    .catch((error) => {
+                        console.error("Service worker kaydedilemedi:", error);
+                    });
+            });
+        }
+    </script>
 
 </body>
 </html>
