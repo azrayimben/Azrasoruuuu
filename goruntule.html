@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Azra'nın Ders Günlüğü</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            color: #edf7ff;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(82,166,255,.18),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(49,112,205,.18),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #06152b,
+                    #092544,
+                    #082f59
+                );
+
+            padding-bottom: 60px;
+        }
+
+
+        .container {
+            width: min(1100px, 94%);
+            margin: auto;
+            padding-top: 35px;
+        }
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .small-title {
+            color: #82c8ff;
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: clamp(38px, 7vw, 65px);
+            font-weight: normal;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #e5f7ff,
+                    #75c5ff,
+                    #ffffff
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #a9cce8;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================
+           HAFTALIK ÖZET
+        ===================================== */
+
+        .weekly-summary {
+            background:
+                rgba(8,38,69,.82);
+
+            border:
+                1px solid
+                rgba(119,198,255,.28);
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            margin-bottom: 30px;
+
+            backdrop-filter: blur(12px);
+        }
+
+        .weekly-title {
+            color: #82c8ff;
+
+            font-size: 13px;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+        }
+
+        .weekly-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .week-card {
+            padding: 22px;
+
+            text-align: center;
+
+            background:
+                rgba(13,51,88,.58);
+
+            border:
+                1px solid
+                rgba(117,196,255,.22);
+
+            border-radius: 18px;
+        }
+
+        .week-label {
+            display: block;
+
+            color: #91b6d3;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+        .week-number {
+            display: block;
+
+            color: #91d2ff;
+
+            font-size: 34px;
+
+            margin-bottom: 6px;
+        }
+
+        .week-range {
+            color: #7096b3;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================
+           STATS
+        ===================================== */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            padding: 20px;
+
+            text-align: center;
+
+            background:
+                rgba(13,51,88,.58);
+
+            border:
+                1px solid
+                rgba(117,196,255,.25);
+
+            border-radius: 18px;
+        }
+
+        .stat-number {
+            display: block;
+
+            font-size: 28px;
+
+            color: #91d2ff;
+
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #91b6d3;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================
+           SECTION
+        ===================================== */
+
+        .section {
+            background:
+                rgba(8,38,69,.72);
+
+            border:
+                1px solid
+                rgba(119,198,255,.25);
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            margin-bottom: 30px;
+
+            backdrop-filter: blur(12px);
+        }
+
+        .section h2 {
+            font-size: 27px;
+
+            font-weight: normal;
+
+            color: #d9f2ff;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================
+           DENEMELER
+        ===================================== */
+
+        .record {
+            padding: 22px;
+
+            margin-bottom: 15px;
+
+            background:
+                rgba(9,43,77,.65);
+
+            border:
+                1px solid
+                rgba(113,193,249,.2);
+
+            border-radius: 20px;
+        }
+
+        .record-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        .record-name {
+            font-size: 21px;
+
+            color: #e2f5ff;
+        }
+
+        .record-date {
+            color: #82b4d5;
+
+            font-size: 13px;
+
+            margin-top: 6px;
+        }
+
+        .record-type {
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(69,157,222,.15);
+
+            border:
+                1px solid
+                rgba(103,191,247,.25);
+
+            color: #8dd0ff;
+
+            font-size: 12px;
+        }
+
+        .record-total {
+            text-align: right;
+        }
+
+        .total-number {
+            display: block;
+
+            font-size: 29px;
+
+            color: #82ceff;
+        }
+
+        .total-label {
+            color: #779dbb;
+
+            font-size: 11px;
+        }
+
+        .record-subjects {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 10px;
+        }
+
+        .mini-subject {
+            padding: 12px 8px;
+
+            text-align: center;
+
+            background:
+                rgba(2,21,40,.4);
+
+            border-radius: 12px;
+        }
+
+        .mini-name {
+            display: block;
+
+            color: #83a8c3;
+
+            font-size: 11px;
+
+            margin-bottom: 5px;
+        }
+
+        .mini-net {
+            color: #d6f1ff;
+
+            font-size: 16px;
+        }
+
+
+        /* =====================================
+           SORU GÜNÜ
+        ===================================== */
+
+        .question-day {
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            background:
+                rgba(9,43,77,.65);
+
+            border:
+                1px solid
+                rgba(113,193,249,.2);
+
+            border-radius: 20px;
+        }
+
+
+        /* TARİH */
+
+        .question-day-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 17px;
+        }
+
+        .question-date {
+            color: #dff5ff;
+
+            font-size: 19px;
+        }
+
+        .question-day-name {
+            color: #82c8ff;
+
+            font-size: 14px;
+
+            margin-left: 6px;
+        }
+
+        .question-total {
+            color: #82ceff;
+
+            font-size: 18px;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================
+           NOT
+        ===================================== */
+
+        .note-box {
+            margin-bottom: 18px;
+
+            padding: 17px 18px;
+
+            background:
+                rgba(22,75,120,.35);
+
+            border:
+                1px solid
+                rgba(117,196,255,.25);
+
+            border-radius: 16px;
+        }
+
+        .note-title {
+            color: #82ceff;
+
+            font-size: 12px;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 9px;
+        }
+
+        .note-text {
+            color: #cce8f8;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            white-space: pre-wrap;
+
+            overflow-wrap: anywhere;
+        }
+
+
+        /* =====================================
+           SORULAR
+        ===================================== */
+
+        .question-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
+        }
+
+        .question-item {
+            padding: 13px;
+
+            background:
+                rgba(2,21,40,.4);
+
+            border-radius: 12px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #a9cce8;
+        }
+
+        .question-count {
+            color: #82ceff;
+        }
+
+
+        /* =====================================
+           BOŞ / LOADING
+        ===================================== */
+
+        .empty {
+            text-align: center;
+
+            padding: 40px 20px;
+
+            color: #7096b3;
+        }
+
+        .loading {
+            text-align: center;
+
+            padding: 50px;
+
+            color: #91d2ff;
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================
+           YENİLE
+        ===================================== */
+
+        .refresh {
+            display: block;
+
+            margin: 25px auto 0;
+
+            border:
+                1px solid
+                rgba(117,196,255,.3);
+
+            background:
+                rgba(10,43,76,.65);
+
+            color: #a9cde8;
+
+            padding: 11px 20px;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            font-family: inherit;
+        }
+
+        .refresh:hover {
+            border-color: #6fc4ff;
+
+            color: white;
+        }
+
+
+        /* =====================================
+           MOBİL
+        ===================================== */
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding-top: 25px;
+            }
+
+            .weekly-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .record-header {
+                flex-direction: column;
+            }
+
+            .record-total {
+                text-align: left;
+            }
+
+            .record-subjects {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .question-list {
+                grid-template-columns: 1fr;
+            }
+
+            .question-day-header {
+                align-items: flex-start;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- =====================================
+         HEADER
+    ===================================== -->
+
+    <header class="header">
+
+        <div class="small-title">
+            ✦ Azra's Study Journal ✦
+        </div>
+
+        <h1>
+            Azra'nın Ders Günlüğü
+        </h1>
+
+        <p>
+            Ders çalışma ve deneme sonuçları
+        </p>
+
+    </header>
+
+
+    <!-- =====================================
+         LOADING
+    ===================================== -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+        Kayıtlar yükleniyor... ✦
+    </div>
+
+
+    <div
+        id="content"
+        style="display:none;"
+    >
+
+
+        <!-- =====================================
+             HAFTALIK ÖZET
+        ===================================== -->
+
+        <section class="weekly-summary">
+
+            <div class="weekly-title">
+                ✦ Haftalık Soru Özeti ✦
+            </div>
+
+
+            <div class="weekly-grid">
+
+
+                <div class="week-card">
+
+                    <span class="week-label">
+                        BU HAFTA
+                    </span>
+
+                    <span
+                        class="week-number"
+                        id="thisWeekQuestions"
+                    >
+                        0
+                    </span>
+
+                    <span
+                        class="week-range"
+                        id="thisWeekRange"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="week-card">
+
+                    <span class="week-label">
+                        GEÇEN HAFTA
+                    </span>
+
+                    <span
+                        class="week-number"
+                        id="lastWeekQuestions"
+                    >
+                        0
+                    </span>
+
+                    <span
+                        class="week-range"
+                        id="lastWeekRange"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             GENEL İSTATİSTİKLER
+        ===================================== -->
+
+        <section class="stats">
+
+
+            <div class="stat">
+
+                <span
+                    class="stat-number"
+                    id="totalExams"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    Toplam Deneme
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span
+                    class="stat-number"
+                    id="bestTYT"
+                >
+                    —
+                </span>
+
+                <span class="stat-label">
+                    En Yüksek TYT
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span
+                    class="stat-number"
+                    id="totalQuestions"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    Toplam Soru
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =====================================
+             DENEMELER
+        ===================================== -->
+
+        <section class="section">
+
+            <h2>
+                📘 Denemeler
+            </h2>
+
+            <div id="examContainer"></div>
+
+        </section>
+
+
+        <!-- =====================================
+             SORU GÜNLÜĞÜ
+        ===================================== -->
+
+        <section class="section">
+
+            <h2>
+                ✏️ Soru Çözüm Günlüğü
+            </h2>
+
+            <div id="questionContainer"></div>
+
+        </section>
+
+
+        <!-- =====================================
+             YENİLE
+        ===================================== -->
+
+        <button
+            class="refresh"
+            onclick="loadEverything()"
+        >
+            ↻ Yenile
+        </button>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* ============================================
+   SUPABASE
+============================================ */
+
+const SUPABASE_URL =
+    "https://rrgyndmawsexhbsidfeo.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_qx-1gMYpWB-st30phQT6xw_iwrksiNM";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* ============================================
+   GÜVENLİ HTML
+============================================ */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+/* ============================================
+   TARİH → YYYY-MM-DD
+============================================ */
+
+function formatDateForDatabase(date) {
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+/* ============================================
+   PAZARTESİYİ BUL
+============================================ */
+
+function getMonday(date) {
+
+    const result =
+        new Date(date);
+
+    result.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+    const day =
+        result.getDay();
+
+    const difference =
+        day === 0
+            ? -6
+            : 1 - day;
+
+    result.setDate(
+        result.getDate() + difference
+    );
+
+    return result;
+
+}
+
+
+/* ============================================
+   KISA TARİH
+============================================ */
+
+function formatShortDate(date) {
+
+    return date.toLocaleDateString(
+        "tr-TR",
+        {
+            day: "numeric",
+            month: "short"
+        }
+    );
+
+}
+
+
+/* ============================================
+   HAFTALIK ÖZET
+============================================ */
+
+function renderWeeklySummary(entries) {
+
+    const today =
+        new Date();
+
+
+    const thisMonday =
+        getMonday(today);
+
+
+    const nextMonday =
+        new Date(
+            thisMonday
+        );
+
+    nextMonday.setDate(
+        nextMonday.getDate() + 7
+    );
+
+
+    const lastMonday =
+        new Date(
+            thisMonday
+        );
+
+    lastMonday.setDate(
+        lastMonday.getDate() - 7
+    );
+
+
+    const thisMondayString =
+        formatDateForDatabase(
+            thisMonday
+        );
+
+
+    const nextMondayString =
+        formatDateForDatabase(
+            nextMonday
+        );
+
+
+    const lastMondayString =
+        formatDateForDatabase(
+            lastMonday
+        );
+
+
+    let thisWeekTotal = 0;
+
+    let lastWeekTotal = 0;
+
+
+    entries.forEach(entry => {
+
+        const date =
+            entry.date;
+
+        const count =
+            Number(
+                entry.question_count
+            ) || 0;
+
+
+        if (
+            date >= thisMondayString &&
+            date < nextMondayString
+        ) {
+
+            thisWeekTotal += count;
+
+        }
+
+
+        if (
+            date >= lastMondayString &&
+            date < thisMondayString
+        ) {
+
+            lastWeekTotal += count;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "thisWeekQuestions"
+    ).textContent =
+        thisWeekTotal.toLocaleString(
+            "tr-TR"
+        );
+
+
+    document.getElementById(
+        "lastWeekQuestions"
+    ).textContent =
+        lastWeekTotal.toLocaleString(
+            "tr-TR"
+        );
+
+
+    const thisSunday =
+        new Date(
+            nextMonday
+        );
+
+    thisSunday.setDate(
+        thisSunday.getDate() - 1
+    );
+
+
+    const lastSunday =
+        new Date(
+            thisMonday
+        );
+
+    lastSunday.setDate(
+        lastSunday.getDate() - 1
+    );
+
+
+    const previousSunday =
+        new Date(
+            lastMonday
+        );
+
+    previousSunday.setDate(
+        previousSunday.getDate() - 1
+    );
+
+
+    document.getElementById(
+        "thisWeekRange"
+    ).textContent =
+
+        `${formatShortDate(thisMonday)} – ${formatShortDate(thisSunday)}`;
+
+
+    document.getElementById(
+        "lastWeekRange"
+    ).textContent =
+
+        `${formatShortDate(lastMonday)} – ${formatShortDate(previousSunday)}`;
+
+}
+
+
+/* ============================================
+   DENEMELERİ YÜKLE
+============================================ */
+
+async function loadExams() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
+        .from("exams")
+
+        .select("*")
+
+        .order(
+            "date",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Deneme yükleme hatası:",
+            error
+        );
+
+        return [];
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* ============================================
+   SORULARI YÜKLE
+============================================ */
+
+async function loadQuestions() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
+        .from("question_entries")
+
+        .select("*")
+
+        .order(
+            "date",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Soru yükleme hatası:",
+            error
+        );
+
+        return [];
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* ============================================
+   NOTLARI YÜKLE
+============================================ */
+
+async function loadNotes() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
+        .from("daily_notes")
+
+        .select("*")
+
+        .order(
+            "date",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Not yükleme hatası:",
+            error
+        );
+
+        return [];
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* ============================================
+   DENEME DÖNÜŞTÜR
+============================================ */
+
+function convertExam(row) {
+
+    let subjects = [];
+
+
+    if (
+        String(row.exam_type).toUpperCase()
+        === "TYT"
+    ) {
+
+        subjects = [
+
+            {
+                name: "Türkçe",
+
+                correct:
+                    row.turkce_correct || 0,
+
+                wrong:
+                    row.turkce_wrong || 0,
+
+                empty:
+                    row.turkce_blank || 0
+            },
+
+            {
+                name: "Matematik",
+
+                correct:
+                    row.matematik_correct || 0,
+
+                wrong:
+                    row.matematik_wrong || 0,
+
+                empty:
+                    row.matematik_blank || 0
+            },
+
+            {
+                name: "Sosyal Bilimler",
+
+                correct:
+                    row.sosyal_correct || 0,
+
+                wrong:
+                    row.sosyal_wrong || 0,
+
+                empty:
+                    row.sosyal_blank || 0
+            },
+
+            {
+                name: "Fen Bilimleri",
+
+                correct:
+                    row.fen_correct || 0,
+
+                wrong:
+                    row.fen_wrong || 0,
+
+                empty:
+                    row.fen_blank || 0
+            }
+
+        ];
+
+    }
+
+    else {
+
+        subjects = [
+
+            {
+                name: "Matematik",
+
+                correct:
+                    row.matematik_correct || 0,
+
+                wrong:
+                    row.matematik_wrong || 0,
+
+                empty:
+                    row.matematik_blank || 0
+            },
+
+            {
+                name: "Fizik",
+
+                correct:
+                    row.fizik_correct || 0,
+
+                wrong:
+                    row.fizik_wrong || 0,
+
+                empty:
+                    row.fizik_blank || 0
+            },
+
+            {
+                name: "Kimya",
+
+                correct:
+                    row.kimya_correct || 0,
+
+                wrong:
+                    row.kimya_wrong || 0,
+
+                empty:
+                    row.kimya_blank || 0
+            },
+
+            {
+                name: "Biyoloji",
+
+                correct:
+                    row.biyoloji_correct || 0,
+
+                wrong:
+                    row.biyoloji_wrong || 0,
+
+                empty:
+                    row.biyoloji_blank || 0
+            }
+
+        ];
+
+    }
+
+
+    subjects =
+        subjects.map(subject => {
+
+            const net =
+                Number(subject.correct)
+                -
+                Number(subject.wrong) / 4;
+
+
+            return {
+                ...subject,
+                net: net
+            };
+
+        });
+
+
+    const totalNet =
+        subjects.reduce(
+
+            (total, subject) =>
+                total + subject.net,
+
+            0
+
+        );
+
+
+    return {
+
+        id: row.id,
+
+        type: row.exam_type,
+
+        name: row.exam_name,
+
+        date: row.date,
+
+        subjects: subjects,
+
+        totalNet: totalNet
+
+    };
+
+}
+
+
+/* ============================================
+   DENEMELERİ GÖSTER
+============================================ */
+
+function renderExams(exams) {
+
+    const container =
+        document.getElementById(
+            "examContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if (exams.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                Henüz kayıtlı deneme yok.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    exams.forEach(row => {
+
+        const exam =
+            convertExam(row);
+
+
+        const date =
+            new Date(
+                exam.date + "T00:00:00"
+            )
+            .toLocaleDateString(
+                "tr-TR",
+                {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+
+        let subjectHTML = "";
+
+
+        exam.subjects.forEach(
+            subject => {
+
+                subjectHTML += `
+
+                    <div class="mini-subject">
+
+                        <span class="mini-name">
+                            ${escapeHTML(
+                                subject.name
+                            )}
+                        </span>
+
+                        <span class="mini-net">
+                            ${subject.net.toFixed(2)}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        const typeText =
+            String(exam.type)
+                .toUpperCase()
+                === "TYT"
+
+                ? "TYT"
+
+                : "AYT SAYISAL";
+
+
+        container.innerHTML += `
+
+            <article class="record">
+
+                <div class="record-header">
+
+                    <div>
+
+                        <div class="record-name">
+                            ${escapeHTML(
+                                exam.name
+                            )}
+                        </div>
+
+                        <div class="record-date">
+                            ${date}
+                        </div>
+
+                    </div>
+
+                    <span class="record-type">
+                        ${typeText}
+                    </span>
+
+                    <div class="record-total">
+
+                        <span class="total-number">
+                            ${exam.totalNet.toFixed(2)}
+                        </span>
+
+                        <span class="total-label">
+                            TOPLAM NET
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="record-subjects">
+
+                    ${subjectHTML}
+
+                </div>
+
+            </article>
+
+        `;
+
+    });
+
+}
+
+
+/* ============================================
+   SORULAR + NOTLAR
+============================================ */
+
+function renderQuestions(
+    entries,
+    notes
+) {
+
+    const container =
+        document.getElementById(
+            "questionContainer"
+        );
+
+
+    container.innerHTML = "";
+
+
+    /* ========================================
+       NOTLARI TARİHE GÖRE EŞLEŞTİR
+    ======================================== */
+
+    const notesByDate = {};
+
+
+    notes.forEach(note => {
+
+        notesByDate[note.date] =
+            note.note;
+
+    });
+
+
+    /* ========================================
+       GÜNLER
+    ======================================== */
+
+    const days = {};
+
+
+    entries.forEach(entry => {
+
+        if (!days[entry.date]) {
+
+            days[entry.date] = [];
+
+        }
+
+        days[entry.date].push(entry);
+
+    });
+
+
+    /* ========================================
+       SADECE NOTU OLAN GÜNLER
+    ======================================== */
+
+    notes.forEach(note => {
+
+        if (!days[note.date]) {
+
+            days[note.date] = [];
+
+        }
+
+    });
+
+
+    const dates =
+        Object.keys(days);
+
+
+    if (dates.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                Henüz soru çözümü veya günlük not yok.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* ========================================
+       TARİHLER
+    ======================================== */
+
+    dates
+        .sort()
+        .reverse()
+        .forEach(date => {
+
+
+            const dayEntries =
+                days[date];
+
+
+            const total =
+                dayEntries.reduce(
+
+                    (sum, item) =>
+
+                        sum +
+                        Number(
+                            item.question_count
+                        ),
+
+                    0
+
+                );
+
+
+            const dateObject =
+                new Date(
+                    date + "T00:00:00"
+                );
+
+
+            const formattedDate =
+                dateObject
+                    .toLocaleDateString(
+                        "tr-TR",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    );
+
+
+            /* =================================
+               GÜN ADI
+            ================================= */
+
+            const dayName =
+                dateObject
+                    .toLocaleDateString(
+                        "tr-TR",
+                        {
+                            weekday: "long"
+                        }
+                    );
+
+
+            /* =================================
+               NOT
+            ================================= */
+
+            let noteHTML = "";
+
+
+            if (
+                notesByDate[date] &&
+                notesByDate[date].trim()
+            ) {
+
+                noteHTML = `
+
+                    <div class="note-box">
+
+                        <div class="note-title">
+
+                            📝 GÜNÜN NOTU
+
+                        </div>
+
+                        <div class="note-text">
+
+                            ${escapeHTML(
+                                notesByDate[date]
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* =================================
+               SORULAR
+            ================================= */
+
+            let itemsHTML = "";
+
+
+            dayEntries.forEach(
+                entry => {
+
+                    itemsHTML += `
+
+                        <div class="question-item">
+
+                            <span>
+
+                                ${escapeHTML(
+                                    entry.subject
+                                )}
+
+                                (${escapeHTML(
+                                    entry.exam_type
+                                )})
+
+                            </span>
+
+                            <span class="question-count">
+
+                                ${Number(
+                                    entry.question_count
+                                )}
+
+                            </span>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            let questionHTML = "";
+
+
+            if (dayEntries.length > 0) {
+
+                questionHTML = `
+
+                    <div class="question-list">
+
+                        ${itemsHTML}
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* =================================
+               GÜN KARTI
+
+               SIRALAMA:
+
+               1. TARİH
+               2. NOT
+               3. SORULAR
+            ================================= */
+
+            container.innerHTML += `
+
+                <div class="question-day">
+
+
+                    <div class="question-day-header">
+
+                        <span class="question-date">
+
+                            ${formattedDate}
+
+                            <span class="question-day-name">
+
+                                · ${dayName}
+
+                            </span>
+
+                        </span>
+
+
+                        ${
+                            dayEntries.length > 0
+
+                            ? `
+
+                                <span class="question-total">
+
+                                    ${total} soru
+
+                                </span>
+
+                            `
+
+                            : ""
+
+                        }
+
+                    </div>
+
+
+                    ${noteHTML}
+
+
+                    ${questionHTML}
+
+
+                </div>
+
+            `;
+
+        });
+
+}
+
+
+/* ============================================
+   HER ŞEYİ YÜKLE
+============================================ */
+
+async function loadEverything() {
+
+    document.getElementById(
+        "loading"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "content"
+    ).style.display = "none";
+
+
+    try {
+
+        const exams =
+            await loadExams();
+
+
+        const questions =
+            await loadQuestions();
+
+
+        const notes =
+            await loadNotes();
+
+
+        /* ==============================
+           HAFTALIK ÖZET
+        ============================== */
+
+        renderWeeklySummary(
+            questions
+        );
+
+
+        /* ==============================
+           TOPLAM DENEME
+        ============================== */
+
+        document.getElementById(
+            "totalExams"
+        ).textContent =
+            exams.length;
+
+
+        /* ==============================
+           EN YÜKSEK TYT
+        ============================== */
+
+        const tytExams =
+            exams
+
+                .filter(
+                    exam =>
+
+                        String(
+                            exam.exam_type
+                        )
+                        .toUpperCase()
+                        === "TYT"
+                )
+
+                .map(
+                    exam =>
+
+                        convertExam(exam)
+                            .totalNet
+                );
+
+
+        if (
+            tytExams.length > 0
+        ) {
+
+            document.getElementById(
+                "bestTYT"
+            ).textContent =
+
+                Math.max(
+                    ...tytExams
+                ).toFixed(2);
+
+        }
+
+        else {
+
+            document.getElementById(
+                "bestTYT"
+            ).textContent =
+                "—";
+
+        }
+
+
+        /* ==============================
+           TOPLAM SORU
+        ============================== */
+
+        const totalQuestions =
+            questions.reduce(
+
+                (sum, entry) =>
+
+                    sum +
+                    Number(
+                        entry.question_count
+                    ),
+
+                0
+
+            );
+
+
+        document.getElementById(
+            "totalQuestions"
+        ).textContent =
+            totalQuestions;
+
+
+        /* ==============================
+           GÖSTER
+        ============================== */
+
+        renderExams(
+            exams
+        );
+
+
+        renderQuestions(
+            questions,
+            notes
+        );
+
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "content"
+        ).style.display =
+            "block";
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Genel yükleme hatası:",
+            error
+        );
+
+
+        document.getElementById(
+            "loading"
+        ).textContent =
+            "Kayıtlar yüklenirken bir hata oluştu.";
+
+    }
+
+}
+
+
+/* ============================================
+   BAŞLAT
+============================================ */
+
+loadEverything();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Denemeler | Azra'nın Ders Günlüğü</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #edf7ff;
+
+    background:
+        radial-gradient(circle at 10% 10%, rgba(82,166,255,.18), transparent 28%),
+        radial-gradient(circle at 90% 80%, rgba(49,112,205,.18), transparent 30%),
+        linear-gradient(135deg,#06152b,#092544,#082f59);
+
+    padding-bottom: 60px;
+}
+
+.container {
+    width: min(1100px,94%);
+    margin: auto;
+    padding-top: 35px;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #9dd7ff;
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 35px;
+}
+
+.back:hover {
+    color: white;
+    transform: translateX(-4px);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.small-title {
+    color: #82c8ff;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: clamp(40px,7vw,68px);
+    font-weight: normal;
+
+    background: linear-gradient(
+        90deg,
+        #e5f7ff,
+        #75c5ff,
+        #ffffff
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header p {
+    color: #a9cce8;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+/* GİRİŞ */
+
+#loginPanel {
+    max-width: 500px;
+    margin: 40px auto;
+    background: rgba(8,38,69,.78);
+    border: 1px solid rgba(119,198,255,.25);
+    border-radius: 25px;
+    padding: 30px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+}
+
+#loginPanel h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: normal;
+    color: #d9f2ff;
+    margin-bottom: 25px;
+}
+
+#loginPanel p {
+    text-align: center;
+    color: #91b9d7;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.login-input {
+    margin-bottom: 15px;
+}
+
+.login-button,
+.save-button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+
+    background: linear-gradient(
+        135deg,
+        #318bd0,
+        #4da9ec
+    );
+
+    color: white;
+    font-family: inherit;
+    font-size: 17px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.login-button:hover,
+.save-button:hover {
+    transform: translateY(-2px);
+}
+
+#loginMessage {
+    text-align: center;
+    margin-top: 15px;
+    color: #ffb6c1;
+    min-height: 20px;
+}
+
+#appContent {
+    display: none;
+}
+
+.logout-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.logout-button {
+    border: 1px solid rgba(117,196,255,.25);
+    background: rgba(10,43,76,.65);
+    color: #9dd7ff;
+    padding: 9px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* İSTATİSTİKLER */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.stat {
+    padding: 20px;
+    text-align: center;
+
+    background: rgba(13,51,88,.58);
+    border: 1px solid rgba(117,196,255,.25);
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-number {
+    display: block;
+    font-size: 28px;
+    color: #91d2ff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #91b6d3;
+    font-size: 13px;
+}
+
+/* SEKME */
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.tab {
+    border: 1px solid rgba(117,196,255,.3);
+    background: rgba(10,43,76,.65);
+    color: #a9cde8;
+
+    padding: 13px 45px;
+    border-radius: 30px;
+
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.tab:hover {
+    border-color: #6fc4ff;
+}
+
+.tab.active {
+    color: white;
+    background: rgba(67,151,218,.25);
+    border-color: #76caff;
+}
+
+/* FORM */
+
+.panel {
+    background: rgba(8,38,69,.72);
+    border: 1px solid rgba(119,198,255,.25);
+
+    border-radius: 25px;
+    padding: 30px;
+
+    backdrop-filter: blur(12px);
+    margin-bottom: 40px;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,.18);
+}
+
+.panel-title {
+    font-size: 25px;
+    font-weight: normal;
+    color: #d9f2ff;
+    margin-bottom: 25px;
+}
+
+.top-inputs {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: #91b9d7;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 13px 15px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(121,195,248,.25);
+
+    background: rgba(2,20,39,.55);
+    color: white;
+
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+input:focus {
+    border-color: #6fc5ff;
+}
+
+.subjects {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+}
+
+.subject {
+    padding: 20px;
+
+    background: rgba(6,28,52,.6);
+    border: 1px solid rgba(112,190,245,.18);
+
+    border-radius: 17px;
+}
+
+.subject-name {
+    color: #d7efff;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.subject-inputs {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+}
+
+.subject input {
+    text-align: center;
+}
+
+.net-preview {
+    margin-top: 12px;
+    text-align: right;
+    color: #76c9ff;
+    font-size: 13px;
+}
+
+.save-button {
+    margin-top: 25px;
+}
+
+/* KAYITLAR */
+
+.records-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.records-title h2 {
+    font-size: 27px;
+    font-weight: normal;
+}
+
+.record-count {
+    color: #76c6fa;
+    font-size: 14px;
+}
+
+.record {
+    padding: 25px;
+    margin-bottom: 15px;
+
+    background: rgba(9,43,77,.65);
+    border: 1px solid rgba(113,193,249,.2);
+    border-radius: 20px;
+}
+
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.record-name {
+    font-size: 21px;
+    color: #e2f5ff;
+}
+
+.record-date {
+    color: #82b4d5;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.record-type {
+    display: inline-block;
+
+    padding: 6px 12px;
+    border-radius: 20px;
+
+    background: rgba(69,157,222,.15);
+    border: 1px solid rgba(103,191,247,.25);
+
+    color: #8dd0ff;
+    font-size: 12px;
+}
+
+.record-total {
+    text-align: right;
+}
+
+.total-number {
+    display: block;
+    font-size: 29px;
+    color: #82ceff;
+}
+
+.total-label {
+    color: #779dbb;
+    font-size: 11px;
+}
+
+.record-subjects {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mini-subject {
+    padding: 12px 8px;
+    text-align: center;
+    background: rgba(2,21,40,.4);
+    border-radius: 12px;
+}
+
+.mini-name {
+    display: block;
+    color: #83a8c3;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.mini-net {
+    color: #d6f1ff;
+    font-size: 16px;
+}
+
+.delete-button {
+    border: 1px solid rgba(255,120,140,.25);
+    background: rgba(255,80,110,.07);
+
+    color: #e9a5b2;
+
+    padding: 9px 15px;
+    border-radius: 10px;
+
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+
+    color: #7096b3;
+
+    background: rgba(7,34,62,.45);
+    border: 1px dashed rgba(108,180,235,.2);
+    border-radius: 20px;
+}
+
+.empty-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.empty p {
+    line-height: 1.6;
+}
+
+@media(max-width:700px) {
+
+    .container {
+        padding-top: 25px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs {
+        width: 100%;
+    }
+
+    .tab {
+        flex: 1;
+        padding: 12px 10px;
+    }
+
+    .top-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .subjects {
+        grid-template-columns: 1fr;
+    }
+
+    .record-subjects {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .record-header {
+        flex-direction: column;
+    }
+
+    .record-total {
+        text-align: left;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="index.html" class="back">
+← Ana Sayfaya Dön
+</a>
+
+<!-- GİRİŞ -->
+
+<div id="loginPanel">
+
+<h2>🔐 Azra'nın Çalışma Alanı</h2>
+
+<p>
+Denemelerini kaydetmek için giriş yap.
+</p>
+
+<div class="login-input">
+<label>E-posta</label>
+
+<input
+type="email"
+id="email"
+placeholder="E-posta adresin">
+</div>
+
+<div class="login-input">
+<label>Şifre</label>
+
+<input
+type="password"
+id="password"
+placeholder="Şifren">
+</div>
+
+<button
+class="login-button"
+onclick="login()">
+
+Giriş Yap ✦
+
+</button>
+
+<div id="loginMessage"></div>
+
+</div>
+
+
+<!-- UYGULAMA -->
+
+<div id="appContent">
+
+<div class="logout-area">
+
+<button
+class="logout-button"
+onclick="logout()">
+
+Çıkış Yap
+
+</button>
+
+</div>
+
+<header class="header">
+
+<div class="small-title">
+✦ Azra's Study Journal ✦
+</div>
+
+<h1>Denemeler</h1>
+
+<p>
+Denemelerini kaydet, netlerini takip et ve
+gelişimini zaman içinde gör.
+</p>
+
+</header>
+
+
+<!-- İSTATİSTİK -->
+
+<section class="stats">
+
+<div class="stat">
+
+<span
+class="stat-number"
+id="totalExams">
+
+0
+
+</span>
+
+<span class="stat-label">
+Toplam Deneme
+</span>
+
+</div>
+
+
+<div class="stat">
+
+<span
+class="stat-number"
+id="bestTYT">
+
+—
+
+</span>
+
+<span class="stat-label">
+En Yüksek TYT
+</span>
+
+</div>
+
+
+<div class="stat">
+
+<span
+class="stat-number"
+id="bestAYT">
+
+—
+
+</span>
+
+<span class="stat-label">
+En Yüksek AYT
+</span>
+
+</div>
+
+</section>
+
+
+<!-- SEKME -->
+
+<div class="tabs">
+
+<button
+class="tab active"
+onclick="changeExamType('TYT')">
+
+TYT
+
+</button>
+
+<button
+class="tab"
+onclick="changeExamType('AYT')">
+
+AYT Sayısal
+
+</button>
+
+</div>
+
+
+<!-- FORM -->
+
+<section class="panel">
+
+<h2
+class="panel-title"
+id="formTitle">
+
+Yeni TYT Denemesi
+
+</h2>
+
+
+<div class="top-inputs">
+
+<div>
+
+<label>Deneme Adı</label>
+
+<input
+type="text"
+id="examName"
+placeholder="Örn. 345 TYT Denemesi 4">
+
+</div>
+
+
+<div>
+
+<label>Tarih</label>
+
+<input
+type="date"
+id="examDate">
+
+</div>
+
+</div>
+
+
+<div
+class="subjects"
+id="subjectsContainer">
+</div>
+
+
+<button
+class="save-button"
+onclick="saveExam()">
+
+✦ Denemeyi Kaydet
+
+</button>
+
+</section>
+
+
+<!-- KAYITLAR -->
+
+<section>
+
+<div class="records-title">
+
+<h2>Kayıtlı Denemeler</h2>
+
+<span
+class="record-count"
+id="recordCount">
+
+0 kayıt
+
+</span>
+
+</div>
+
+<div id="recordsContainer"></div>
+
+</section>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==============================
+   SUPABASE
+============================== */
+
+const SUPABASE_URL = "https://qtxaonfryltjgdfpheev.supabase.co";
+const SUPABASE_KEY = "sb_publishable_0aqxmCW2N2QYg4HKdWptSA_eoqKcVWf";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+        );
+
+
+/* ==============================
+   AYARLAR
+============================== */
+
+let currentType = "TYT";
+let exams = [];
+
+const subjects = {
+
+TYT: [
+"Türkçe",
+"Matematik",
+"Sosyal Bilimler",
+"Fen Bilimleri"
+],
+
+AYT: [
+"Matematik",
+"Fizik",
+"Kimya",
+"Biyoloji"
+]
+
+};
+
+
+/* ==============================
+   YARDIMCI
+============================== */
+
+function makeKey(subject) {
+
+return subject
+.toLowerCase()
+.replaceAll(" ","_")
+.replaceAll("ü","u")
+.replaceAll("ş","s")
+.replaceAll("ı","i")
+.replaceAll("ö","o")
+.replaceAll("ç","c")
+.replaceAll("ğ","g");
+
+}
+
+
+/* ==============================
+   TARİH
+============================== */
+
+document.getElementById("examDate").value =
+new Date().toISOString().split("T")[0];
+
+
+/* ==============================
+   GİRİŞ
+============================== */
+
+async function login() {
+
+const email =
+document.getElementById("email").value.trim();
+
+const password =
+document.getElementById("password").value;
+
+const message =
+document.getElementById("loginMessage");
+
+if (!email || !password) {
+
+message.textContent =
+"Lütfen e-posta ve şifreni gir.";
+
+return;
+}
+
+message.textContent =
+"Giriş yapılıyor...";
+
+const { data, error } =
+await supabaseClient.auth.signInWithPassword({
+
+email: email,
+password: password
+
+});
+
+if (error) {
+
+message.textContent =
+"Giriş başarısız: " + error.message;
+
+return;
+}
+
+message.textContent = "";
+
+document.getElementById("loginPanel").style.display =
+"none";
+
+document.getElementById("appContent").style.display =
+"block";
+
+await loadExams();
+
+changeExamType("TYT");
+
+}
+
+
+/* ==============================
+   ÇIKIŞ
+============================== */
+
+async function logout() {
+
+await supabaseClient.auth.signOut();
+
+document.getElementById("appContent").style.display =
+"none";
+
+document.getElementById("loginPanel").style.display =
+"block";
+
+exams = [];
+
+}
+
+
+/* ==============================
+   OTURUM KONTROLÜ
+============================== */
+
+async function checkSession() {
+
+const {
+data: { session }
+} = await supabaseClient.auth.getSession();
+
+if (session) {
+
+document.getElementById("loginPanel").style.display =
+"none";
+
+document.getElementById("appContent").style.display =
+"block";
+
+await loadExams();
+
+changeExamType("TYT");
+
+}
+
+}
+
+
+/* ==============================
+   DERSLER
+============================== */
+
+function renderSubjects() {
+
+const container =
+document.getElementById("subjectsContainer");
+
+container.innerHTML = "";
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+container.innerHTML += `
+
+<div class="subject">
+
+<div class="subject-name">
+${subject}
+</div>
+
+<div class="subject-inputs">
+
+<div>
+
+<label>Doğru</label>
+
+<input
+type="number"
+min="0"
+id="${key}_correct"
+value="0">
+
+</div>
+
+
+<div>
+
+<label>Yanlış</label>
+
+<input
+type="number"
+min="0"
+id="${key}_wrong"
+value="0">
+
+</div>
+
+
+<div>
+
+<label>Boş</label>
+
+<input
+type="number"
+min="0"
+id="${key}_blank"
+value="0">
+
+</div>
+
+</div>
+
+
+<div
+class="net-preview"
+id="${key}_net">
+
+Net: 0.00
+
+</div>
+
+</div>
+
+`;
+
+});
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+["correct","wrong","blank"].forEach(type => {
+
+document
+.getElementById(`${key}_${type}`)
+.addEventListener(
+"input",
+updatePreview
+);
+
+});
+
+});
+
+updatePreview();
+
+document.getElementById("formTitle").textContent =
+currentType === "TYT"
+? "Yeni TYT Denemesi"
+: "Yeni AYT Sayısal Denemesi";
+
+}
+
+
+/* ==============================
+   NET ÖNİZLEME
+============================== */
+
+function updatePreview() {
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+const correct =
+Number(
+document.getElementById(`${key}_correct`)?.value || 0
+);
+
+const wrong =
+Number(
+document.getElementById(`${key}_wrong`)?.value || 0
+);
+
+const net =
+correct - wrong / 4;
+
+const netElement =
+document.getElementById(`${key}_net`);
+
+if (netElement) {
+
+netElement.textContent =
+"Net: " + net.toFixed(2);
+
+}
+
+});
+
+}
+
+
+/* ==============================
+   SEKME
+============================== */
+
+function changeExamType(type) {
+
+currentType = type;
+
+document.querySelectorAll(".tab").forEach(tab => {
+
+tab.classList.remove("active");
+
+});
+
+if (type === "TYT") {
+
+document
+.querySelectorAll(".tab")[0]
+.classList.add("active");
+
+} else {
+
+document
+.querySelectorAll(".tab")[1]
+.classList.add("active");
+
+}
+
+renderSubjects();
+
+renderRecords();
+
+}
+
+
+/* ==============================
+   KAYDET
+============================== */
+
+async function saveExam() {
+
+const {
+data: { user }
+} = await supabaseClient.auth.getUser();
+
+if (!user) {
+
+alert("Önce giriş yapmalısın.");
+
+return;
+}
+
+const examName =
+document.getElementById("examName").value.trim();
+
+const examDate =
+document.getElementById("examDate").value;
+
+if (!examName || !examDate) {
+
+alert("Deneme adı ve tarih gerekli.");
+
+return;
+}
+
+const row = {
+
+user_id: user.id,
+
+date: examDate,
+
+exam_type: currentType,
+
+exam_name: examName
+
+};
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+row[`${key}_correct`] =
+Number(
+document.getElementById(`${key}_correct`).value || 0
+);
+
+row[`${key}_wrong`] =
+Number(
+document.getElementById(`${key}_wrong`).value || 0
+);
+
+row[`${key}_blank`] =
+Number(
+document.getElementById(`${key}_blank`).value || 0
+);
+
+});
+
+
+const { error } =
+await supabaseClient
+.from("exams")
+.insert(row);
+
+if (error) {
+
+alert(
+"Kaydedilemedi: " +
+error.message
+);
+
+return;
+}
+
+alert("Deneme başarıyla kaydedildi! ✦");
+
+document.getElementById("examName").value = "";
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+["correct","wrong","blank"].forEach(type => {
+
+document.getElementById(`${key}_${type}`).value = 0;
+
+});
+
+});
+
+updatePreview();
+
+await loadExams();
+
+}
+
+
+/* ==============================
+   DENEMELERİ YÜKLE
+============================== */
+
+async function loadExams() {
+
+const {
+data: { user }
+} = await supabaseClient.auth.getUser();
+
+if (!user) return;
+
+const { data, error } =
+await supabaseClient
+.from("exams")
+.select("*")
+.eq("user_id",user.id)
+.order("date",{ascending:false});
+
+if (error) {
+
+console.error(error);
+
+alert(
+"Denemeler yüklenemedi: " +
+error.message
+);
+
+return;
+}
+
+exams = data || [];
+
+renderRecords();
+updateStats();
+
+}
+
+
+/* ==============================
+   NET
+============================== */
+
+function calculateNet(correct,wrong) {
+
+return Number(correct || 0) -
+Number(wrong || 0) / 4;
+
+}
+
+
+/* ==============================
+   KAYITLARI GÖSTER
+============================== */
+
+function renderRecords() {
+
+const container =
+document.getElementById("recordsContainer");
+
+const filtered =
+exams.filter(
+exam => exam.exam_type === currentType
+);
+
+document.getElementById("recordCount").textContent =
+filtered.length + " kayıt";
+
+if (filtered.length === 0) {
+
+container.innerHTML = `
+
+<div class="empty">
+
+<div class="empty-icon">
+📖
+</div>
+
+<p>
+Henüz ${currentType} denemesi eklenmemiş.
+</p>
+
+</div>
+
+`;
+
+return;
+}
+
+container.innerHTML = "";
+
+filtered.forEach(exam => {
+
+let totalNet = 0;
+
+let subjectHTML = "";
+
+subjects[currentType].forEach(subject => {
+
+const key = makeKey(subject);
+
+const correct =
+exam[`${key}_correct`] || 0;
+
+const wrong =
+exam[`${key}_wrong`] || 0;
+
+const net =
+calculateNet(correct,wrong);
+
+totalNet += net;
+
+subjectHTML += `
+
+<div class="mini-subject">
+
+<span class="mini-name">
+${subject}
+</span>
+
+<span class="mini-net">
+${net.toFixed(2)}
+</span>
+
+</div>
+
+`;
+
+});
+
+
+container.innerHTML += `
+
+<div class="record">
+
+<div class="record-header">
+
+<div>
+
+<div class="record-name">
+${escapeHTML(exam.exam_name)}
+</div>
+
+<div class="record-date">
+${exam.date}
+</div>
+
+</div>
+
+<div>
+
+<span class="record-type">
+${exam.exam_type}
+</span>
+
+</div>
+
+<div class="record-total">
+
+<span class="total-number">
+${totalNet.toFixed(2)}
+</span>
+
+<span class="total-label">
+TOPLAM NET
+</span>
+
+</div>
+
+</div>
+
+
+<div class="record-subjects">
+
+${subjectHTML}
+
+</div>
+
+
+<button
+class="delete-button"
+onclick="deleteExam(${exam.id})">
+
+🗑 Sil
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* ==============================
+   İSTATİSTİK
+============================== */
+
+function updateStats() {
+
+document.getElementById("totalExams").textContent =
+exams.length;
+
+const calculateExamTotal = exam => {
+
+let total = 0;
+
+subjects[exam.exam_type].forEach(subject => {
+
+const key = makeKey(subject);
+
+total += calculateNet(
+exam[`${key}_correct`],
+exam[`${key}_wrong`]
+);
+
+});
+
+return total;
+
+};
+
+
+const tyt =
+exams
+.filter(e => e.exam_type === "TYT")
+.map(calculateExamTotal);
+
+const ayt =
+exams
+.filter(e => e.exam_type === "AYT")
+.map(calculateExamTotal);
+
+
+document.getElementById("bestTYT").textContent =
+tyt.length
+? Math.max(...tyt).toFixed(2)
+: "—";
+
+
+document.getElementById("bestAYT").textContent =
+ayt.length
+? Math.max(...ayt).toFixed(2)
+: "—";
+
+}
+
+
+/* ==============================
+   SİL
+============================== */
+
+async function deleteExam(id) {
+
+if (
+!confirm(
+"Bu denemeyi silmek istediğine emin misin?"
+)
+) {
+
+return;
+}
+
+const { error } =
+await supabaseClient
+.from("exams")
+.delete()
+.eq("id",id);
+
+if (error) {
+
+alert(
+"Silinemedi: " +
+error.message
+);
+
+return;
+}
+
+await loadExams();
+
+}
+
+
+/* ==============================
+   HTML GÜVENLİĞİ
+============================== */
+
+function escapeHTML(text) {
+
+const div =
+document.createElement("div");
+
+div.textContent = text;
+
+return div.innerHTML;
+
+}
+
+
+/* ==============================
+   BAŞLAT
+============================== */
+
+renderSubjects();
+
+checkSession();
+
+</script>
+
+</body>
+</html>
